@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set>
+    <translate
+            android:fromXDelta="-100%p"
+            android:toXDelta="0.0"
+            android:fromYDelta="0.0"
+            android:toYDelta="0.0"
+            android:duration="@android:integer/config_mediumAnimTime"/>
+    <alpha
+            android:fromAlpha="0"
+            android:toAlpha="1.0"
+            android:duration="@android:integer/config_mediumAnimTime"/>
+
+</set>
