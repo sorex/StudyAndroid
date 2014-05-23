@@ -37,4 +37,8 @@ public class DemoMainActivity extends Activity {
 		});
 		layout.addView(btn);
 	}
+	
+	public void DownFiles() {
+		//下载对应的文件
+	}
 }

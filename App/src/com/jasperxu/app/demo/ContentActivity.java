@@ -10,20 +10,19 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * @author Jasper
- *
+ * 
  */
-public class ContentActivity extends Activity implements
-		GestureDetector.OnGestureListener {
+public class ContentActivity extends Activity implements GestureDetector.OnGestureListener {
 
 	GestureDetector detector;
 	final int FLIP_DISTANCE = 50;
 
 	int Index;
 	String BookGuid;
+	int PageSize;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +32,7 @@ public class ContentActivity extends Activity implements
 		// 得到传过来的Intent对象
 		Intent intent = getIntent();
 		Index = intent.getIntExtra("Index", 1);
+		PageSize = intent.getIntExtra("PageSize", 1);
 		BookGuid = intent.getStringExtra("BookGuid");
 
 		TextView IndexView = (TextView) this.findViewById(R.id.IndexView);
@@ -45,7 +45,6 @@ public class ContentActivity extends Activity implements
 		ShowPage();
 		ShowVideo();
 	}
-
 
 	public void ShowPage() {
 
@@ -94,8 +93,7 @@ public class ContentActivity extends Activity implements
 	}
 
 	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-			float distanceY) {
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -107,27 +105,37 @@ public class ContentActivity extends Activity implements
 	}
 
 	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-			float velocityY) {
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 		// TODO Auto-generated method stub
 		if (e1.getX() - e2.getX() > FLIP_DISTANCE) {
-			Intent intent = new Intent(this, ContentActivity.class);
-			intent.putExtra("Index", Index + 1);
-			intent.putExtra("BookGuid", BookGuid);
-			startActivity(intent);
-			overridePendingTransition(R.anim.slide_in_right,
-					R.anim.slide_out_left);
-			finish();
-			return true;
+			if (PageSize > Index) {
+				Intent intent = new Intent(this, ContentActivity.class);
+				intent.putExtra("Index", Index + 1);
+				intent.putExtra("BookGuid", BookGuid);
+				startActivity(intent);
+				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				finish();
+				return true;
+			} else {
+				return false;
+			}
 		} else if (e2.getX() - e1.getX() > FLIP_DISTANCE) {
-			Intent intent = new Intent(this, ContentActivity.class);
-			intent.putExtra("Index", Index - 1);
-			intent.putExtra("BookGuid", BookGuid);
-			startActivity(intent);
-			overridePendingTransition(R.anim.slide_in_left,
-					R.anim.slide_out_right);
-			finish();
-			return true;
+			if (Index > 0) {
+				Intent intent = new Intent(this, ContentActivity.class);
+				intent.putExtra("Index", Index - 1);
+				intent.putExtra("BookGuid", BookGuid);
+				startActivity(intent);
+				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+				finish();
+				return true;
+			} else {
+				Intent intent = new Intent(this, DirectoryActivity.class);
+				intent.putExtra("BookGuid", BookGuid);
+				startActivity(intent);
+				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+				finish();
+				return true;
+			}
 		}
 		return false;
 	}
