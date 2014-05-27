@@ -7,10 +7,10 @@
 	<item value="false" key="org.eclipse.jdt.ui.formatter_page.show_invisible_characters"/>
 	<item value="939" key="org.eclipse.jdt.uiformatter_pagemodify_dialog.preferred_height"/>
 	<item value="460" key="org.eclipse.jdt.uiformatter_pagemodify_dialog.preferred_x"/>
-	<item value="0" key="org.eclipse.jdt.uiformatter_pagemodify_dialog.preferred_y"/>
-	<item value="1049" key="org.eclipse.jdt.uiformatter_pagemodify_dialog.preferred_width"/>
-	<item value="4" key="org.eclipse.jdt.uiformatter_pagemodify_dialog.last_focus"/>
 	<item value="1" key="org.eclipse.jdt.uiformatter_page.line_wrapping_tab_page.last_category_index"/>
+	<item value="4" key="org.eclipse.jdt.uiformatter_pagemodify_dialog.last_focus"/>
+	<item value="1049" key="org.eclipse.jdt.uiformatter_pagemodify_dialog.preferred_width"/>
+	<item value="0" key="org.eclipse.jdt.uiformatter_pagemodify_dialog.preferred_y"/>
 	<section name="OptionalMessageDialog.hide.">
 		<item value="true" key="org.eclipse.jdt.ui.typecomment.deprecated"/>
 	</section>
@@ -30,15 +30,15 @@
 		<item value="15" key="INCLUDE_MASK"/>
 		<item value="0" key="HISTORY_SIZE"/>
 	</section>
-	<section name="org.eclipse.ltk.ui.refactoring.settings">
-	</section>
-	<section name="RenameInformationPopup">
+	<section name="quick_assist_proposal_size">
 	</section>
 	<section name="NewClassWizardPage">
 		<item value="false" key="create_constructor"/>
 		<item value="true" key="create_unimplemented"/>
 	</section>
-	<section name="quick_assist_proposal_size">
+	<section name="RenameInformationPopup">
+	</section>
+	<section name="org.eclipse.ltk.ui.refactoring.settings">
 	</section>
 	<section name="NewPackageWizardPage">
 		<item value="false" key="create_package_info_java"/>
