@@ -24,5 +24,6 @@
     <string name="title_activity_gesture">GestureActivity</string>
     <string name="title_activity_json_parse">JsonParseActivity</string>
     <string name="title_activity_sqlite">SQLiteActivity</string>
+    <string name="title_activity_zip">ZipActivity</string>
 
 </resources>

@@ -55,7 +55,9 @@ public class ContentActivity extends Activity implements GestureDetector.OnGestu
 	}
 
 	public void GoBackHandler(View view) {
-		startActivity(new Intent(this, DirectoryActivity.class));
+		Intent intent = new Intent(this, DirectoryActivity.class);
+		intent.putExtra("BookGuid", BookGuid);
+		startActivity(intent);
 		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 		finish();
 	}
@@ -112,6 +114,7 @@ public class ContentActivity extends Activity implements GestureDetector.OnGestu
 				Intent intent = new Intent(this, ContentActivity.class);
 				intent.putExtra("Index", Index + 1);
 				intent.putExtra("BookGuid", BookGuid);
+				intent.putExtra("PageSize", PageSize);
 				startActivity(intent);
 				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 				finish();
@@ -120,10 +123,11 @@ public class ContentActivity extends Activity implements GestureDetector.OnGestu
 				return false;
 			}
 		} else if (e2.getX() - e1.getX() > FLIP_DISTANCE) {
-			if (Index > 0) {
+			if (Index > 1) {
 				Intent intent = new Intent(this, ContentActivity.class);
 				intent.putExtra("Index", Index - 1);
 				intent.putExtra("BookGuid", BookGuid);
+				intent.putExtra("PageSize", PageSize);
 				startActivity(intent);
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 				finish();
