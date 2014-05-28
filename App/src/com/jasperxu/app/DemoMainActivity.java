@@ -6,10 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Enumeration;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import com.jasperxu.app.demo.DirectoryActivity;
@@ -32,7 +29,7 @@ public class DemoMainActivity extends Activity {
 		setContentView(R.layout.activity_demo_main);
 
 		// 下载数据包，下载视频，解压数据包
-		// DownFiles();
+		//DownFiles();
 
 		LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
 		Button btn = new Button(this);

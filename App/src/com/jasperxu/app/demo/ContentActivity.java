@@ -1,15 +1,24 @@
 package com.jasperxu.app.demo;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import com.jasperxu.app.R;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.ScrollView;
-import android.widget.TextView;
+import android.widget.VideoView;
 
 /**
  * @author Jasper
@@ -18,11 +27,12 @@ import android.widget.TextView;
 public class ContentActivity extends Activity implements GestureDetector.OnGestureListener {
 
 	GestureDetector detector;
-	final int FLIP_DISTANCE = 50;
+	final int FLIP_DISTANCE = 150;
 
 	int Index;
 	String BookGuid;
 	int PageSize;
+	BookInfo bookInfo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +45,7 @@ public class ContentActivity extends Activity implements GestureDetector.OnGestu
 		PageSize = intent.getIntExtra("PageSize", 1);
 		BookGuid = intent.getStringExtra("BookGuid");
 
-		TextView IndexView = (TextView) this.findViewById(R.id.IndexView);
-		IndexView.setText(String.valueOf(Index));
-		TextView BookGuidView = (TextView) this.findViewById(R.id.BookGuidView);
-		BookGuidView.setText(BookGuid);
+		bookInfo = ((ApplicationBookInfo) getApplication()).getBookInfo();
 
 		detector = new GestureDetector(this, this);
 
@@ -47,19 +54,68 @@ public class ContentActivity extends Activity implements GestureDetector.OnGestu
 	}
 
 	public void ShowPage() {
-
+		ImageView BookImage = (ImageView) this.findViewById(R.id.BookImage);
+		try {
+			FileInputStream fis = new FileInputStream(Environment.getExternalStorageDirectory() + "/com.jasperxu.app/"
+					+ BookGuid + "/contents/" + String.format("%1$04d.jpg", Index));
+			Bitmap bitmap = BitmapFactory.decodeStream(fis);
+			BookImage.setImageBitmap(bitmap);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void ShowVideo() {
+		BookInfo.Page page = null;
+		for (int i = 0; i < bookInfo.Pages.size(); i++) {
+			if (bookInfo.Pages.get(i).Index == Index) {
+				page = bookInfo.Pages.get(i);
+				break;
+			}
+		}
 
+		if (page != null) {
+			LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
+			// 说明有视频
+			for (int i = 0; i < page.Videos.size(); i++) {
+				VideoView temp = new VideoView(this);
+				temp.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+						ViewGroup.LayoutParams.WRAP_CONTENT));
+
+				temp.setVideoPath(Environment.getExternalStorageDirectory() + "/com.jasperxu.app/videos/"
+						+ page.Videos.get(i));
+				
+				MediaController mediaController = new MediaController(this);
+				temp.setMediaController(mediaController);
+				mediaController.setMediaPlayer(temp);
+				
+				layout.addView(temp);
+			}
+		}
 	}
 
-	public void GoBackHandler(View view) {
-		Intent intent = new Intent(this, DirectoryActivity.class);
-		intent.putExtra("BookGuid", BookGuid);
-		startActivity(intent);
-		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-		finish();
+	@Override
+	public boolean onCreateOptionsMenu(android.view.Menu menu) {
+		menu.add(0, R.string.go_back, 0, this.getString(R.string.go_back));
+
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(android.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case R.string.go_back:
+			Intent intent = new Intent(this, DirectoryActivity.class);
+			intent.putExtra("BookGuid", BookGuid);
+			startActivity(intent);
+			overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+			finish();
+			break;
+
+		default:
+			break;
+		}
+		return true;
 	}
 
 	@Override

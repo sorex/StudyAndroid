@@ -7,7 +7,6 @@ import org.json.JSONTokener;
 
 import com.jasperxu.app.DemoMainActivity;
 import com.jasperxu.app.R;
-import com.jasperxu.app.StudyMainActivity;
 import com.jasperxu.util.FileHelp;
 
 import android.app.Activity;
@@ -37,27 +36,24 @@ public class DirectoryActivity extends Activity {
 		LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
 
 		try {
-			JSONObject bookInfo = GetBookJsonObject();
+			BookInfo bookInfo = GetBookInfo();
 
 			TextView BookGuidView = (TextView) this.findViewById(R.id.BookGuidView);
-			BookGuidView.setText(bookInfo.getString("Name"));
+			BookGuidView.setText(bookInfo.getName());
 
-			PageSize = bookInfo.getInt("PageSize");
-			JSONArray Directory = bookInfo.getJSONArray("Directory");
+			PageSize = bookInfo.getPageSize();
 
-			for (int i = 0; i < Directory.length(); i++) {
-				final JSONObject tempObject = Directory.getJSONObject(i);
-
-				final int Index = tempObject.getInt("Index");
-				boolean HaveVideos = tempObject.getBoolean("HaveVideos");
+			for (int i = 0; i < bookInfo.Directory.size(); i++) {
+				BookInfo.Directory directory = bookInfo.Directory.get(i);
+				final int Index = directory.Index;
 
 				TextView tv = new TextView(this);
 				tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
 						ViewGroup.LayoutParams.WRAP_CONTENT));// 设置TextView的布局
 				// tv1.setPadding(50, 100, 0, 0);//设置边距
-				tv.setText(tempObject.getString("Name") + (HaveVideos ? " video" : ""));
+				tv.setText(directory.Name + (directory.HaveVideos ? " video" : ""));
 				tv.setAutoLinkMask(Linkify.ALL);
-				setTextViewSizebyHeadingLevels(tv, tempObject.getInt("HeadingLevels"));
+				setTextViewSizebyHeadingLevels(tv, directory.HeadingLevels);
 				tv.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
@@ -74,10 +70,8 @@ public class DirectoryActivity extends Activity {
 			}
 
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -135,11 +129,43 @@ public class DirectoryActivity extends Activity {
 		}
 	}
 
-	private JSONObject GetBookJsonObject() throws JSONException, Exception {
-
+	private BookInfo GetBookInfo() throws Exception {
 		String DirPath = Environment.getExternalStorageDirectory() + "/com.jasperxu.app/" + BookGuid + "/";
+		JSONObject json = (JSONObject) (new JSONTokener(FileHelp.getStringFromFile(DirPath + "directory.json")))
+				.nextValue();
+		BookInfo bookInfo = new BookInfo();
 
-		return (JSONObject) (new JSONTokener(FileHelp.getStringFromFile(DirPath + "directory.json"))).nextValue();
+		bookInfo.setName(json.getString("Name"));
+		bookInfo.setPageSize(json.getInt("PageSize"));
+
+		JSONArray Directory = json.getJSONArray("Directory");
+		for (int i = 0; i < Directory.length(); i++) {
+			JSONObject tempJson = Directory.getJSONObject(i);
+			BookInfo.Directory temp = bookInfo.new Directory();
+			temp.Name = tempJson.getString("Name");
+			temp.Index = tempJson.getInt("Index");
+			temp.HeadingLevels = tempJson.getInt("HeadingLevels");
+			temp.HaveVideos = tempJson.getBoolean("HaveVideos");
+			bookInfo.Directory.add(temp);
+		}
+
+		JSONArray Pages = json.getJSONArray("Pages");
+		for (int i = 0; i < Pages.length(); i++) {
+			JSONObject tempJson = Pages.getJSONObject(i);
+			BookInfo.Page temp = bookInfo.new Page();
+			temp.Index = tempJson.getInt("Index");
+
+			JSONArray Videos = tempJson.getJSONArray("Videos");
+			for (int j = 0; j < Videos.length(); j++) {
+				temp.Videos.add(Videos.getString(j));
+			}
+
+			bookInfo.Pages.add(temp);
+		}
+
+		((ApplicationBookInfo) getApplication()).setBookInfo(bookInfo);
+
+		return bookInfo;
 	}
 
 	public void GoBackHandler(View view) {
