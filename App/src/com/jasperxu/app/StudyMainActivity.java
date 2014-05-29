@@ -1,10 +1,7 @@
 package com.jasperxu.app;
 
-import com.jasperxu.app.study.AddViewByCodeActivity;
-import com.jasperxu.app.study.DownloadFileActivity;
-import com.jasperxu.app.study.GestureActivity;
-import com.jasperxu.app.study.JsonParseActivity;
-import com.jasperxu.app.study.SQLiteActivity;
+import com.jasperxu.app.demo.VideoActivity;
+import com.jasperxu.app.study.*;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -69,7 +66,13 @@ public class StudyMainActivity extends Activity {
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 		finish();
 	}
-
+	
+	public void VideoHandler(View view) {
+		startActivity(new Intent(this, VideoActivity.class));
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+		finish();
+	}
+	
 	public void GestureHandler(View view) {
 		startActivity(new Intent(this, GestureActivity.class));
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

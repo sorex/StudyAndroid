@@ -70,6 +70,14 @@
             android:name="com.jasperxu.app.study.ZipActivity"
             android:label="@string/title_activity_zip" >
         </activity>
+        <activity
+            android:name="com.jasperxu.app.study.VideoActivity"
+            android:label="@string/title_activity_video" >
+        </activity>
+        <activity
+            android:name="com.jasperxu.app.demo.VideoActivity"
+            android:label="@string/title_activity_video" >
+        </activity>
     </application>
 
 </manifest>

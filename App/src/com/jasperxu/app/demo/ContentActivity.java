@@ -1,5 +1,6 @@
 package com.jasperxu.app.demo;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -11,13 +12,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.util.Linkify;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 /**
@@ -78,18 +82,25 @@ public class ContentActivity extends Activity implements GestureDetector.OnGestu
 			LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
 			// 说明有视频
 			for (int i = 0; i < page.Videos.size(); i++) {
-				VideoView temp = new VideoView(this);
-				temp.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+				final String video = page.Videos.get(i);
+				TextView textView = new TextView(this);
+				textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
 						ViewGroup.LayoutParams.WRAP_CONTENT));
-
-				temp.setVideoPath(Environment.getExternalStorageDirectory() + "/com.jasperxu.app/videos/"
-						+ page.Videos.get(i));
-				
-				MediaController mediaController = new MediaController(this);
-				temp.setMediaController(mediaController);
-				mediaController.setMediaPlayer(temp);
-				
-				layout.addView(temp);
+				textView.setText("视频"+String.valueOf(i+1));
+				textView.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						Intent intent = new Intent(getBaseContext(), VideoActivity.class);
+						intent.putExtra("BookGuid", BookGuid);
+						intent.putExtra("Index", Index);
+						intent.putExtra("PageSize", PageSize);
+						intent.putExtra("video", video);
+						startActivity(intent);
+						overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+						finish();
+					}
+				});
+				layout.addView(textView);
 			}
 		}
 	}
