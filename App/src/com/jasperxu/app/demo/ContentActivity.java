@@ -1,8 +1,8 @@
 package com.jasperxu.app.demo;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import com.jasperxu.app.R;
 
@@ -12,17 +12,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.util.Linkify;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 /**
  * @author Jasper
@@ -37,6 +34,7 @@ public class ContentActivity extends Activity implements GestureDetector.OnGestu
 	String BookGuid;
 	int PageSize;
 	BookInfo bookInfo;
+	ArrayList<String> Videos = new ArrayList<String>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +52,6 @@ public class ContentActivity extends Activity implements GestureDetector.OnGestu
 		detector = new GestureDetector(this, this);
 
 		ShowPage();
-		ShowVideo();
 	}
 
 	public void ShowPage() {
@@ -108,6 +105,23 @@ public class ContentActivity extends Activity implements GestureDetector.OnGestu
 	@Override
 	public boolean onCreateOptionsMenu(android.view.Menu menu) {
 		menu.add(0, R.string.go_back, 0, this.getString(R.string.go_back));
+		
+		//添加视频的菜单
+		BookInfo.Page page = null;
+		for (int i = 0; i < bookInfo.Pages.size(); i++) {
+			if (bookInfo.Pages.get(i).Index == Index) {
+				page = bookInfo.Pages.get(i);
+				break;
+			}
+		}
+
+		if (page != null) {
+			// 说明有视频
+			for (int i = 0; i < page.Videos.size(); i++) {
+				menu.add(0, i, 0, "视频"+String.valueOf(i+1));
+				Videos.add(page.Videos.get(i));
+			}
+		}
 
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -124,6 +138,16 @@ public class ContentActivity extends Activity implements GestureDetector.OnGestu
 			break;
 
 		default:
+			String video = Videos.get(item.getItemId());
+			Intent intent2 = new Intent(getBaseContext(), VideoActivity.class);
+			intent2.putExtra("BookGuid", BookGuid);
+			intent2.putExtra("Index", Index);
+			intent2.putExtra("PageSize", PageSize);
+			intent2.putExtra("video", video);
+			startActivity(intent2);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+			finish();
+			
 			break;
 		}
 		return true;

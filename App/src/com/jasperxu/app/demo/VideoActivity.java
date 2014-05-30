@@ -3,15 +3,11 @@ package com.jasperxu.app.demo;
 import java.io.File;
 
 import com.jasperxu.app.R;
-import com.jasperxu.app.R.layout;
 
-import android.R.integer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
